@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Career Roadmap - CarrierIQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your personalized career roadmap for {{ role }}.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Carrier<span class="logo-accent">IQ</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/upload">Upload</a>
+            <a href="/fill_manual">Manual Entry</a>
+        </nav>
+    </header>
+
+    <section class="roadmap-section">
+
+        <h2>{{ role }} Career Roadmap</h2>
+        <p>Your Current Score: <strong>{{ score }}%</strong></p>
+
+        <div class="roadmap-grid">
+
+            <div class="roadmap-box">
+                <h3>📘 Foundation</h3>
+                <ul>
+                    {% for item in roadmap.foundation %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="roadmap-box">
+                <h3>🚀 Advanced Skills</h3>
+                <ul>
+                    {% for item in roadmap.advanced %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="roadmap-box">
+                <h3>💻 Projects</h3>
+                <ul>
+                    {% for item in roadmap.projects %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="roadmap-box">
+                <h3>🏆 Job Preparation</h3>
+                <ul>
+                    {% for item in roadmap.prep %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/" class="primary-btn">← Back to Home</a>
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 CarrierIQ | AI Resume Intelligence</p>
+    </footer>
+
+</body>
+
+</html>

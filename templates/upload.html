@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Resume - CarrierIQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upload your resume for instant AI-powered skill analysis and company matching.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Carrier<span class="logo-accent">IQ</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/fill_manual">Manual Entry</a>
+        </nav>
+    </header>
+
+    <section class="upload-section">
+        <div class="upload-card">
+
+            <h2>Upload Your Resume</h2>
+            <p class="subtitle">
+                Drop your resume to get instant skill analysis, score, and real company matches.
+            </p>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class="flashes">
+                {% for msg in messages %}
+                <li>{{ msg }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <label class="file-drop-area" id="dropArea">
+                    <input type="file" name="resume" required id="fileInput">
+                    <span class="upload-text" id="uploadText">Click to browse or drag your file here</span>
+                    <span class="file-info">PDF, DOC, DOCX (Max 5MB)</span>
+                </label>
+
+                <button type="submit" class="primary-btn upload-btn">
+                    ⚡ Analyze Resume
+                </button>
+
+            </form>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 CarrierIQ | AI Resume Intelligence</p>
+    </footer>
+
+    <script>
+        // Show selected filename
+        const fileInput = document.getElementById('fileInput');
+        const uploadText = document.getElementById('uploadText');
+
+        fileInput.addEventListener('change', function () {
+            if (this.files.length > 0) {
+                uploadText.textContent = '📄 ' + this.files[0].name;
+                uploadText.style.color = '#4ade80';
+            }
+        });
+
+        // Drag and drop visual feedback
+        const dropArea = document.getElementById('dropArea');
+        ['dragenter', 'dragover'].forEach(e => {
+            dropArea.addEventListener(e, () => {
+                dropArea.style.borderColor = '#8b5cf6';
+                dropArea.style.background = 'rgba(139, 92, 246, 0.1)';
+            });
+        });
+        ['dragleave', 'drop'].forEach(e => {
+            dropArea.addEventListener(e, () => {
+                dropArea.style.borderColor = '';
+                dropArea.style.background = '';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

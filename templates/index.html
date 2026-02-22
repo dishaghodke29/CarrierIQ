@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CarrierIQ - AI Resume Intelligence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="AI-powered resume scoring, skill gap analysis, and career roadmaps. Upload your resume or enter skills manually.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="navbar">
+        <div class="logo">Carrier<span class="logo-accent">IQ</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/upload">Upload Resume</a>
+            <a href="/fill_manual" class="nav-btn">Get Started</a>
+        </nav>
+    </header>
+
+    <!-- ================= HERO SECTION ================= -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>AI-Powered Resume Scoring & Career Roadmaps</h1>
+            <p>
+                Upload your resume or fill your profile manually.
+                Get instant scoring, skill gap analysis, real company matches, and a personalized growth roadmap.
+                <strong>No API keys required.</strong>
+            </p>
+            <div class="hero-buttons">
+                <a href="/upload" class="primary-btn">Upload Resume</a>
+                <a href="/fill_manual" class="secondary-btn">Fill Manually</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FEATURES ================= -->
+    <section class="features">
+        <h2>Why Choose CarrierIQ?</h2>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <h3>🎯 Smart Skill Scoring</h3>
+                <p>Intelligent skill matching with fuzzy detection. Scores core, important, and bonus skills separately.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔍 Real Company Matches</h3>
+                <p>Find companies actively hiring for your skills — scraped live from LinkedIn and job boards.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>🗺️ Personalized Roadmap</h3>
+                <p>Get a structured career growth plan tailored to your exact skill gaps and target role.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+        <p>© 2026 CarrierIQ | Built with AI — No API Keys Required</p>
+    </footer>
+
+</body>
+
+</html>

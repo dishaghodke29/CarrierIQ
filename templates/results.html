@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Analysis Results - CarrierIQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Your AI-powered resume analysis results — skill scores, company matches, and career roadmap.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">Carrier<span class="logo-accent">IQ</span></div>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('upload') }}">Upload</a>
+            <a href="{{ url_for('fill_manual') }}">Manual Entry</a>
+        </nav>
+    </header>
+
+    <section class="results-section">
+
+        <!-- AI SUMMARY BANNER -->
+        {% if ai_summary %}
+        <div class="ai-summary-banner animate-in">
+            <div class="ai-icon">🤖</div>
+            <div class="ai-text">
+                <strong>AI Verdict</strong>
+                <p>{{ ai_summary }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- SCORE SECTION -->
+        <div class="score-card animate-in">
+            <h2>Your Career Readiness Score</h2>
+
+            <div class="score-ring-wrapper">
+                <div class="score-ring" data-score="{{ score }}">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="score-ring-bg" cx="60" cy="60" r="54" />
+                        <circle class="score-ring-fill" cx="60" cy="60" r="54" stroke-dasharray="339.292"
+                            stroke-dashoffset="{{ 339.292 - (339.292 * score / 100) }}" />
+                    </svg>
+                    <div class="score-value">
+                        <span class="score-number">{{ score }}</span>
+                        <span class="score-percent">%</span>
+                    </div>
+                </div>
+
+                <div class="score-label">
+                    {% if score >= 85 %}
+                    <span class="score-badge badge-excellent">🏆 Excellent</span>
+                    {% elif score >= 70 %}
+                    <span class="score-badge badge-strong">💪 Strong</span>
+                    {% elif score >= 50 %}
+                    <span class="score-badge badge-good">👍 Good Foundation</span>
+                    {% elif score >= 30 %}
+                    <span class="score-badge badge-developing">📈 Developing</span>
+                    {% else %}
+                    <span class="score-badge badge-beginner">🌱 Getting Started</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if target_role %}
+            <div class="target-role-tag">
+                Analyzing for: <strong>{{ target_role }}</strong>
+            </div>
+            <div class="roadmap-btn-wrapper">
+                <a href="{{ url_for('roadmap', role=target_role, score=score) }}" class="primary-btn roadmap-btn">
+                    📍 View Career Roadmap
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- SKILL BREAKDOWN -->
+        {% if skill_breakdown %}
+        <div class="skill-breakdown animate-in">
+            <h2 class="section-title">Skill Breakdown</h2>
+            <div class="skill-categories">
+
+                {% if skill_breakdown.core_matched or skill_breakdown.core_missing %}
+                <div class="skill-category">
+                    <h4 class="category-label category-core">🔴 Core Skills</h4>
+                    <div class="skill-chips">
+                        {% for skill in skill_breakdown.core_matched %}
+                        <span class="chip chip-matched">✓ {{ skill }}</span>
+                        {% endfor %}
+                        {% for skill in skill_breakdown.core_missing %}
+                        <span class="chip chip-missing">✗ {{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if skill_breakdown.important_matched or skill_breakdown.important_missing %}
+                <div class="skill-category">
+                    <h4 class="category-label category-important">🟡 Important Skills</h4>
+                    <div class="skill-chips">
+                        {% for skill in skill_breakdown.important_matched %}
+                        <span class="chip chip-matched">✓ {{ skill }}</span>
+                        {% endfor %}
+                        {% for skill in skill_breakdown.important_missing %}
+                        <span class="chip chip-missing">✗ {{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if skill_breakdown.nice_matched or skill_breakdown.nice_missing %}
+                <div class="skill-category">
+                    <h4 class="category-label category-nice">🟢 Bonus Skills</h4>
+                    <div class="skill-chips">
+                        {% for skill in skill_breakdown.nice_matched %}
+                        <span class="chip chip-matched">✓ {{ skill }}</span>
+                        {% endfor %}
+                        {% for skill in skill_breakdown.nice_missing %}
+                        <span class="chip chip-missing">✗ {{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- RESULTS GRID -->
+        <div class="results-grid">
+
+            <!-- Matched Skills -->
+            <div class="result-box animate-in" style="animation-delay: 0.1s">
+                <div class="result-box-header">
+                    <span class="result-icon">✅</span>
+                    <h3>Matched Skills</h3>
+                </div>
+                <ul>
+                    {% if matched_skills %}
+                    {% for skill in matched_skills %}
+                    <li class="skill-item matched">{{ skill }}</li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="empty-state">No matched skills found.</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Missing Skills -->
+            <div class="result-box animate-in" style="animation-delay: 0.2s">
+                <div class="result-box-header">
+                    <span class="result-icon">❌</span>
+                    <h3>Missing Skills</h3>
+                </div>
+                <ul>
+                    {% if missing_skills %}
+                    {% for skill in missing_skills %}
+                    <li class="skill-item missing">{{ skill }}</li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="empty-state">No missing skills 🎉</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Companies Hiring -->
+            <div class="result-box companies-box animate-in" style="animation-delay: 0.3s">
+                <div class="result-box-header">
+                    <span class="result-icon">🏢</span>
+                    <h3>Companies Currently Hiring</h3>
+                </div>
+
+                {% if jobs %}
+                <div class="company-cards">
+                    {% for job in jobs %}
+                    <div class="company-card">
+                        <div class="company-info">
+                            <div class="company-name">{{ job.company }}</div>
+                            <div class="company-title">{{ job.title }}</div>
+                            {% if job.location %}
+                            <div class="company-location">📍 {{ job.location }}</div>
+                            {% endif %}
+                            {% if job.salary %}
+                            <div class="company-salary">💰 {{ job.salary }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="company-actions">
+                            <div
+                                class="eligibility-badge {% if job.eligibility >= 70 %}eligibility-high{% elif job.eligibility >= 50 %}eligibility-mid{% else %}eligibility-low{% endif %}">
+                                <span class="eligibility-value">{{ job.eligibility }}%</span>
+                                <span class="eligibility-label">Eligibility</span>
+                            </div>
+                            {% if job.url %}
+                            <a href="{{ job.url }}" target="_blank" class="apply-btn">
+                                Apply →
+                            </a>
+                            {% endif %}
+                            <span class="source-badge">{{ job.source }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% elif companies %}
+                <ul>
+                    {% for company in companies %}
+                    <li>{{ company }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="empty-state">No company suggestions available.</p>
+                {% endif %}
+            </div>
+
+            <!-- Suggestions -->
+            <div class="result-box suggestions-box animate-in" style="animation-delay: 0.4s">
+                <div class="result-box-header">
+                    <span class="result-icon">💡</span>
+                    <h3>Improvement Suggestions</h3>
+                </div>
+                <ul class="suggestions-list">
+                    {% if suggestions %}
+                    {% for suggestion in suggestions %}
+                    <li class="suggestion-item">{{ suggestion }}</li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="empty-state">No suggestions available.</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 CarrierIQ | AI Resume Intelligence — No API Keys Required</p>
+    </footer>
+
+    <script>
+        // Animate score ring on load
+        document.addEventListener('DOMContentLoaded', function () {
+            const ring = document.querySelector('.score-ring-fill');
+            if (ring) {
+                const finalOffset = ring.getAttribute('stroke-dashoffset');
+                ring.style.strokeDashoffset = '339.292';
+                setTimeout(() => {
+                    ring.style.transition = 'stroke-dashoffset 1.5s ease-out';
+                    ring.style.strokeDashoffset = finalOffset;
+                }, 300);
+            }
+
+            // Animate cards on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-in').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+
+</html>
