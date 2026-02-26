@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <title>Career Roadmap - CarrierIQ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Your personalized career roadmap for {{ role }}.">
+    <meta name="description"
+        content="Your personalized career roadmap for {{ role }} with curated courses and resources.">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
@@ -22,50 +23,159 @@
 
     <section class="roadmap-section">
 
-        <h2>{{ role }} Career Roadmap</h2>
-        <p>Your Current Score: <strong>{{ score }}%</strong></p>
-
-        <div class="roadmap-grid">
-
-            <div class="roadmap-box">
-                <h3>📘 Foundation</h3>
-                <ul>
-                    {% for item in roadmap.foundation %}
-                    <li>{{ item }}</li>
-                    {% endfor %}
-                </ul>
+        <!-- Header -->
+        <div class="roadmap-hero">
+            <h1>🗺️ {{ role }} Career Roadmap</h1>
+            <p class="roadmap-subtitle">Your personalized learning path based on your skill gaps</p>
+            <div class="roadmap-score-tag">
+                Current Score: <strong>{{ score }}%</strong>
             </div>
-
-            <div class="roadmap-box">
-                <h3>🚀 Advanced Skills</h3>
-                <ul>
-                    {% for item in roadmap.advanced %}
-                    <li>{{ item }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="roadmap-box">
-                <h3>💻 Projects</h3>
-                <ul>
-                    {% for item in roadmap.projects %}
-                    <li>{{ item }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="roadmap-box">
-                <h3>🏆 Job Preparation</h3>
-                <ul>
-                    {% for item in roadmap.prep %}
-                    <li>{{ item }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-
         </div>
 
-        <div style="text-align: center; margin-top: 40px;">
+        {% if phases %}
+
+        <!-- Timeline -->
+        <div class="roadmap-timeline">
+            {% for phase in phases %}
+            <div class="phase-block phase-{{ phase.color }} animate-in"
+                style="animation-delay: {{ loop.index0 * 0.15 }}s">
+
+                <!-- Phase Header -->
+                <div class="phase-header">
+                    <div class="phase-icon">{{ phase.icon }}</div>
+                    <div class="phase-title-area">
+                        <h2>{{ phase.name }}</h2>
+                        <p class="phase-desc">{{ phase.description }}</p>
+                    </div>
+                    <span class="phase-count">{{ phase.skills | length }} skill{{ 's' if phase.skills | length != 1
+                        }}</span>
+                </div>
+
+                <!-- Skills -->
+                <div class="phase-skills">
+                    {% for skill in phase.skills %}
+                    <div class="skill-roadmap-card" onclick="this.classList.toggle('expanded')">
+
+                        <div class="skill-card-header">
+                            <div class="skill-card-left">
+                                <span class="skill-card-name">{{ skill.name }}</span>
+                                {% if skill.resources.difficulty %}
+                                <span class="difficulty-tag difficulty-{{ skill.resources.difficulty }}">{{
+                                    skill.resources.difficulty }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="skill-card-right">
+                                {% if skill.resources.time %}
+                                <span class="time-tag">⏱️ {{ skill.resources.time }}</span>
+                                {% endif %}
+                                <span class="expand-icon">▼</span>
+                            </div>
+                        </div>
+
+                        <!-- Expanded Resources (hidden by default) -->
+                        <div class="skill-resources">
+
+                            {% if skill.resources.courses %}
+                            <div class="resource-group">
+                                <h5>📚 Courses</h5>
+                                {% for course in skill.resources.courses %}
+                                <a href="{{ course.url }}" target="_blank" class="resource-link course-link"
+                                    onclick="event.stopPropagation()">
+                                    {{ course.title }}
+                                    {% if course.free %}<span class="free-badge">FREE</span>{% endif %}
+                                    <span class="link-arrow">↗</span>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            {% if skill.resources.videos %}
+                            <div class="resource-group">
+                                <h5>🎬 Videos</h5>
+                                {% for video in skill.resources.videos %}
+                                <a href="{{ video.url }}" target="_blank" class="resource-link video-link"
+                                    onclick="event.stopPropagation()">
+                                    {{ video.title }}
+                                    <span class="link-arrow">↗</span>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            {% if skill.resources.docs %}
+                            <div class="resource-group">
+                                <h5>📖 Documentation</h5>
+                                {% for doc in skill.resources.docs %}
+                                <a href="{{ doc.url }}" target="_blank" class="resource-link doc-link"
+                                    onclick="event.stopPropagation()">
+                                    {{ doc.title }}
+                                    <span class="link-arrow">↗</span>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- No missing skills  -->
+        <div class="roadmap-complete">
+            <div class="complete-icon">🎉</div>
+            <h2>Amazing! You have all the skills covered!</h2>
+            <p>Focus on building projects, contributing to open source, and preparing for interviews.</p>
+        </div>
+        {% endif %}
+
+        <!-- Projects Section -->
+        {% if projects %}
+        <div class="roadmap-projects animate-in">
+            <h2>💻 Recommended Projects</h2>
+            <p class="phase-desc">Build these to showcase your skills to employers</p>
+            <div class="project-grid">
+                {% for project in projects %}
+                <div class="project-card">
+                    <span class="project-number">{{ loop.index }}</span>
+                    <span class="project-name">{{ project }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Final Tips -->
+        <div class="roadmap-tips animate-in">
+            <h2>🏆 Job Preparation Tips</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <span class="tip-icon">📝</span>
+                    <h4>Build Portfolio</h4>
+                    <p>Showcase your projects on GitHub and a personal website</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">🎯</span>
+                    <h4>Practice Interviews</h4>
+                    <p>Use LeetCode, HackerRank, and mock interview platforms</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">📄</span>
+                    <h4>Optimize Resume</h4>
+                    <p>Tailor your resume for each job and use ATS-friendly formatting</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">🤝</span>
+                    <h4>Network on LinkedIn</h4>
+                    <p>Connect with professionals, join communities, attend events</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 50px;">
             <a href="/" class="primary-btn">← Back to Home</a>
         </div>
 
@@ -75,6 +185,22 @@
         <p>© 2026 CarrierIQ | AI Resume Intelligence</p>
     </footer>
 
+    <script>
+        // Animate cards on scroll
+        document.addEventListener('DOMContentLoaded', function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-in').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
 </body>
 
 </html>

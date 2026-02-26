@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ATS Analysis - CarrierIQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detailed ATS compatibility analysis for your resume.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Carrier<span class="logo-accent">IQ</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/upload">Upload</a>
+            <a href="/fill_manual">Manual Entry</a>
+        </nav>
+    </header>
+
+    <section class="ats-page-section">
+
+        <!-- Hero -->
+        <div class="ats-page-hero">
+            <h1>📄 ATS Compatibility Report</h1>
+            <p class="ats-page-subtitle">How well your resume performs with Applicant Tracking Systems</p>
+        </div>
+
+        <!-- Score Card -->
+        <div class="ats-page-card">
+            <div class="ats-header">
+                <div class="ats-score-ring" data-score="{{ ats_score }}">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="ats-ring-bg" cx="60" cy="60" r="54" />
+                        <circle class="ats-ring-fill" cx="60" cy="60" r="54" stroke-dasharray="339.292"
+                            stroke-dashoffset="{{ 339.292 - (339.292 * ats_score / 100) }}" />
+                    </svg>
+                    <div class="ats-score-value">
+                        <span class="ats-score-number">{{ ats_score }}</span>
+                        <span class="ats-score-label">ATS</span>
+                    </div>
+                </div>
+
+                <div class="ats-title-area">
+                    <h2>ATS Compatibility Score</h2>
+                    <p class="ats-subtitle">Your resume was analyzed against industry-standard ATS parsing criteria</p>
+                    <div class="ats-badges-row">
+                        {% if ats_grade %}
+                        <span class="ats-grade ats-grade-{{ ats_grade[0]|lower }}">{{ ats_grade }}</span>
+                        {% endif %}
+                        {% if ats_score >= 75 %}
+                        <span class="score-badge badge-excellent">ATS-Friendly</span>
+                        {% elif ats_score >= 50 %}
+                        <span class="score-badge badge-good">Needs Improvement</span>
+                        {% else %}
+                        <span class="score-badge badge-beginner">Low Compatibility</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Stats Bar -->
+            {% if ats_summary %}
+            <div class="ats-summary-bar">
+                <div class="ats-stat ats-stat-pass">
+                    <span class="ats-stat-dot dot-pass"></span>
+                    <span class="ats-stat-count">{{ ats_summary.passed }}</span> Passed
+                </div>
+                <div class="ats-stat ats-stat-warn">
+                    <span class="ats-stat-dot dot-warn"></span>
+                    <span class="ats-stat-count">{{ ats_summary.warnings }}</span> Warnings
+                </div>
+                <div class="ats-stat ats-stat-fail">
+                    <span class="ats-stat-dot dot-fail"></span>
+                    <span class="ats-stat-count">{{ ats_summary.failed }}</span> Failed
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Criteria Breakdown -->
+        {% if ats_criteria %}
+        <div class="ats-page-criteria animate-in">
+            <h2 class="ats-section-heading">📊 Detailed Criteria Breakdown</h2>
+            <p class="ats-section-desc">Each criterion shows how your resume scores on ATS parsing checks</p>
+
+            <div class="ats-criteria">
+                {% for c in ats_criteria %}
+                <div class="ats-criterion ats-criterion-{{ c.status }}">
+                    <div class="criterion-header">
+                        <span class="criterion-name">
+                            <span class="criterion-icon">
+                                {% if c.status == 'good' %}
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80"
+                                    stroke-width="3" stroke-linecap="round">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                {% elif c.status == 'warn' %}
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24"
+                                    stroke-width="3" stroke-linecap="round">
+                                    <path d="M12 9v4m0 4h.01M12 2L2 22h20L12 2z" />
+                                </svg>
+                                {% else %}
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171"
+                                    stroke-width="3" stroke-linecap="round">
+                                    <path d="M18 6L6 18M6 6l12 12" />
+                                </svg>
+                                {% endif %}
+                            </span>
+                            {{ c.name }}
+                        </span>
+                        <div class="criterion-meta">
+                            <span class="criterion-weight">{{ c.weight }}% weight</span>
+                            <span class="criterion-score">{{ c.score }}%</span>
+                        </div>
+                    </div>
+                    <div class="criterion-bar">
+                        <div class="criterion-fill criterion-fill-{{ c.status }}" style="width: {{ c.score }}%"></div>
+                    </div>
+                    {% if c.details %}
+                    <div class="criterion-details">{{ c.details }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+
+        <!-- Quick Tips Section -->
+        <div class="ats-quick-tips animate-in">
+            <h2 class="ats-section-heading">📌 ATS Best Practices</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <span class="tip-icon">📝</span>
+                    <h4>Use Standard Headings</h4>
+                    <p>Stick to "Experience", "Education", "Skills" — ATS recognize these</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">🚫</span>
+                    <h4>Avoid Graphics</h4>
+                    <p>Tables, images, and columns confuse most ATS parsers</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">🔤</span>
+                    <h4>Use Keywords</h4>
+                    <p>Mirror the job description's exact terminology and skills</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">📄</span>
+                    <h4>PDF or DOCX</h4>
+                    <p>These are the most compatible formats for ATS systems</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="/" class="primary-btn">← Back to Home</a>
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 CarrierIQ | AI Resume Intelligence</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-in').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -17,55 +17,147 @@
         <div class="logo">Carrier<span class="logo-accent">IQ</span></div>
         <nav>
             <a href="/">Home</a>
-            <a href="/upload">Upload Resume</a>
-            <a href="/fill_manual" class="nav-btn">Get Started</a>
+            <a href="/upload">Upload</a>
+            <a href="/fill_manual">Manual Entry</a>
+            <a href="/career-finder">Career Finder</a>
         </nav>
     </header>
 
     <!-- ================= HERO SECTION ================= -->
     <section class="hero">
         <div class="hero-content">
-            <h1>AI-Powered Resume Scoring & Career Roadmaps</h1>
+            <span class="hero-badge">⚡ AI-Powered Career Intelligence</span>
+            <h1>Your Career Journey,<br>Supercharged with AI</h1>
             <p>
-                Upload your resume or fill your profile manually.
-                Get instant scoring, skill gap analysis, real company matches, and a personalized growth roadmap.
-                <strong>No API keys required.</strong>
+                Upload your resume or enter your skills to get instant scoring, ATS analysis,
+                real company matches, and a personalized learning roadmap — across
+                <strong>35+ engineering roles</strong>.
             </p>
-            <div class="hero-buttons">
-                <a href="/upload" class="primary-btn">Upload Resume</a>
-                <a href="/fill_manual" class="secondary-btn">Fill Manually</a>
+            <div class="hero-actions">
+                <a href="/upload" class="action-card">
+                    <span class="action-icon">📄</span>
+                    <div class="action-text">
+                        <span class="action-title">Upload Resume</span>
+                        <span class="action-desc">PDF, DOC, DOCX</span>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
+                <a href="/fill_manual" class="action-card">
+                    <span class="action-icon">✏️</span>
+                    <div class="action-text">
+                        <span class="action-title">Fill Manually</span>
+                        <span class="action-desc">Enter skills & role</span>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
+                <a href="/career-finder" class="action-card action-card-accent">
+                    <span class="action-icon">🎯</span>
+                    <div class="action-text">
+                        <span class="action-title">Career Finder</span>
+                        <span class="action-desc">Find your best role</span>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="stat-number">35+</span>
+                    <span class="stat-label">Job Roles</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="stat-number">80+</span>
+                    <span class="stat-label">Skills Tracked</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Engineering Fields</span>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- ================= FEATURES ================= -->
-    <section class="features">
+    <section class="features" id="features">
         <h2>Why Choose CarrierIQ?</h2>
+        <p class="features-subtitle">Everything you need to map, plan, and accelerate your engineering career</p>
 
         <div class="feature-grid">
 
             <div class="feature-card">
-                <h3>🎯 Smart Skill Scoring</h3>
-                <p>Intelligent skill matching with fuzzy detection. Scores core, important, and bonus skills separately.
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Skill Scoring</h3>
+                <p>Intelligent skill matching with fuzzy detection. Scores core, important, and bonus skills with
+                    weighted analysis.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3>ATS Compatibility</h3>
+                <p>Get your resume scored against real ATS parsing criteria. See what passes, what fails, and how to fix
+                    it.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🗺️</div>
+                <h3>Personalized Roadmap</h3>
+                <p>A phased learning plan with curated courses and videos for every missing skill — tailored to your
+                    exact gaps.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Career Finder</h3>
+                <p>Enter your skills and discover the best matching roles across all engineering branches — ranked by
+                    percentage.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🏢</div>
+                <h3>Real Company Matches</h3>
+                <p>Find companies actively hiring for your skills — scraped live from LinkedIn with eligibility
+                    percentages.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>All Engineering Branches</h3>
+                <p>CS, Mechanical, Electrical, Civil, Biomedical, Environmental — 35+ roles across 6 engineering fields.
                 </p>
-            </div>
-
-            <div class="feature-card">
-                <h3>🔍 Real Company Matches</h3>
-                <p>Find companies actively hiring for your skills — scraped live from LinkedIn and job boards.</p>
-            </div>
-
-            <div class="feature-card">
-                <h3>🗺️ Personalized Roadmap</h3>
-                <p>Get a structured career growth plan tailored to your exact skill gaps and target role.</p>
             </div>
 
         </div>
     </section>
 
+    <!-- ================= HOW IT WORKS ================= -->
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps-row">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <h4>Upload or Enter</h4>
+                <p>Upload your resume or type your skills and target role manually</p>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <h4>AI Analyzes</h4>
+                <p>CarrierIQ scores your profile, checks ATS, and finds skill gaps</p>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <h4>Get Your Roadmap</h4>
+                <p>Get a personalized learning plan with courses, projects & company matches</p>
+            </div>
+        </div>
+    </section>
+
+
     <!-- ================= FOOTER ================= -->
     <footer class="footer">
-        <p>© 2026 CarrierIQ | Built with AI — No API Keys Required</p>
+        <p>© 2026 CarrierIQ | AI Resume Intelligence — No API Keys Required</p>
     </footer>
 
 </body>

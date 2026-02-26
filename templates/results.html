@@ -71,12 +71,53 @@
                 Analyzing for: <strong>{{ target_role }}</strong>
             </div>
             <div class="roadmap-btn-wrapper">
-                <a href="{{ url_for('roadmap', role=target_role, score=score) }}" class="primary-btn roadmap-btn">
-                    📍 View Career Roadmap
+                {% set core_missing = skill_breakdown.get('core_missing', []) | join(',') %}
+                {% set important_missing = skill_breakdown.get('important_missing', []) | join(',') %}
+                {% set nice_missing = skill_breakdown.get('nice_missing', []) | join(',') %}
+                <a href="{{ url_for('roadmap', role=target_role, score=score) }}?core={{ core_missing }}&important={{ important_missing }}&nice={{ nice_missing }}"
+                    class="primary-btn roadmap-btn">
+                    📍 View Your Personalized Roadmap
                 </a>
             </div>
             {% endif %}
         </div>
+
+        <!-- ATS SCORE PREVIEW (links to dedicated page) -->
+        {% if ats_score is not none %}
+        <div class="ats-preview-card animate-in">
+            <div class="ats-preview-left">
+                <div class="ats-score-ring" data-score="{{ ats_score }}">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="ats-ring-bg" cx="60" cy="60" r="54" />
+                        <circle class="ats-ring-fill" cx="60" cy="60" r="54" stroke-dasharray="339.292"
+                            stroke-dashoffset="{{ 339.292 - (339.292 * ats_score / 100) }}" />
+                    </svg>
+                    <div class="ats-score-value">
+                        <span class="ats-score-number">{{ ats_score }}</span>
+                        <span class="ats-score-label">ATS</span>
+                    </div>
+                </div>
+                <div class="ats-preview-info">
+                    <h3>ATS Compatibility Score</h3>
+                    <div class="ats-badges-row">
+                        {% if ats_grade %}
+                        <span class="ats-grade ats-grade-{{ ats_grade[0]|lower }}">{{ ats_grade }}</span>
+                        {% endif %}
+                        {% if ats_score >= 75 %}
+                        <span class="score-badge badge-excellent">ATS-Friendly</span>
+                        {% elif ats_score >= 50 %}
+                        <span class="score-badge badge-good">Needs Improvement</span>
+                        {% else %}
+                        <span class="score-badge badge-beginner">Low Compatibility</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('ats_page') }}" class="primary-btn ats-detail-btn">
+                📄 View Full ATS Report
+            </a>
+        </div>
+        {% endif %}
 
         <!-- SKILL BREAKDOWN -->
         {% if skill_breakdown %}
@@ -215,22 +256,6 @@
                 {% endif %}
             </div>
 
-            <!-- Suggestions -->
-            <div class="result-box suggestions-box animate-in" style="animation-delay: 0.4s">
-                <div class="result-box-header">
-                    <span class="result-icon">💡</span>
-                    <h3>Improvement Suggestions</h3>
-                </div>
-                <ul class="suggestions-list">
-                    {% if suggestions %}
-                    {% for suggestion in suggestions %}
-                    <li class="suggestion-item">{{ suggestion }}</li>
-                    {% endfor %}
-                    {% else %}
-                    <li class="empty-state">No suggestions available.</li>
-                    {% endif %}
-                </ul>
-            </div>
 
         </div>
 
@@ -251,6 +276,17 @@
                     ring.style.transition = 'stroke-dashoffset 1.5s ease-out';
                     ring.style.strokeDashoffset = finalOffset;
                 }, 300);
+            }
+
+            // Animate ATS ring on load
+            const atsRing = document.querySelector('.ats-ring-fill');
+            if (atsRing) {
+                const atsFinal = atsRing.getAttribute('stroke-dashoffset');
+                atsRing.style.strokeDashoffset = '339.292';
+                setTimeout(() => {
+                    atsRing.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    atsRing.style.strokeDashoffset = atsFinal;
+                }, 600);
             }
 
             // Animate cards on scroll

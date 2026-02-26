@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Career Finder - CarrierIQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find the best career roles matching your skills and education.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Carrier<span class="logo-accent">IQ</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/upload">Upload</a>
+            <a href="/fill_manual">Manual Entry</a>
+            <a href="/career-finder" class="nav-active">Career Finder</a>
+        </nav>
+    </header>
+
+    <section class="cf-section">
+
+        <!-- Hero -->
+        <div class="cf-hero">
+            <h1>🎯 Career Finder</h1>
+            <p class="cf-subtitle">Enter your skills & education — we'll show you the best matching career paths</p>
+        </div>
+
+        <!-- Input Form -->
+        <div class="cf-form-card">
+            <form method="POST" action="/career-finder">
+                <div class="cf-form-group">
+                    <label for="skills">Your Skills</label>
+                    <input type="text" id="skills" name="skills" placeholder="e.g. python, react, sql, machine learning"
+                        value="{{ skills_input or '' }}" required>
+                    <span class="cf-hint">Comma-separated list of your technical skills</span>
+                </div>
+                <div class="cf-form-group">
+                    <label for="education">Education</label>
+                    <input type="text" id="education" name="education" placeholder="e.g. B.Tech Computer Science, MBA"
+                        value="{{ education or '' }}">
+                    <span class="cf-hint">Your degree or qualification (optional)</span>
+                </div>
+                <button type="submit" class="primary-btn cf-submit-btn">🔍 Find Best Careers</button>
+            </form>
+        </div>
+
+        <!-- Results -->
+        {% if roles %}
+        <div class="cf-results">
+            <h2 class="cf-results-heading">Your Top Career Matches</h2>
+            <p class="cf-results-desc">Ranked by skill match percentage across {{ total_roles }} career roles</p>
+
+            <!-- Top 3 Highlight -->
+            <div class="cf-top3">
+                {% for r in roles[:3] %}
+                <div class="cf-top-card cf-rank-{{ loop.index }}">
+                    <div class="cf-rank-badge">#{{ loop.index }}</div>
+                    <div class="cf-top-score-ring">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="cf-ring-bg" cx="50" cy="50" r="42" />
+                            <circle class="cf-ring-fill" cx="50" cy="50" r="42" stroke-dasharray="263.894"
+                                stroke-dashoffset="{{ 263.894 - (263.894 * r.score / 100) }}" />
+                        </svg>
+                        <span class="cf-top-pct">{{ r.score }}%</span>
+                    </div>
+                    <h3 class="cf-top-role">{{ r.role }}</h3>
+                    <span class="cf-category-tag">{{ r.category }}</span>
+                    <div class="cf-top-meta">
+                        <span>{{ r.matched }}/{{ r.total }} skills matched</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Full List -->
+            {% if roles|length > 3 %}
+            <div class="cf-full-list">
+                <h3 class="cf-list-heading">All Matching Roles</h3>
+                <div class="cf-table-wrap">
+                    <table class="cf-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Role</th>
+                                <th>Category</th>
+                                <th>Match</th>
+                                <th>Skills</th>
+                                <th class="cf-bar-col">Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in roles %}
+                            <tr
+                                class="{% if r.score >= 50 %}cf-row-strong{% elif r.score >= 25 %}cf-row-mid{% else %}cf-row-low{% endif %}">
+                                <td class="cf-rank-num">{{ loop.index }}</td>
+                                <td class="cf-role-name">{{ r.role }}</td>
+                                <td><span class="cf-cat-label">{{ r.category }}</span></td>
+                                <td class="cf-match-pct">{{ r.score }}%</td>
+                                <td class="cf-skills-count">{{ r.matched }}/{{ r.total }}</td>
+                                <td class="cf-bar-col">
+                                    <div class="cf-bar">
+                                        <div class="cf-bar-fill {% if r.score >= 70 %}cf-fill-high{% elif r.score >= 40 %}cf-fill-mid{% else %}cf-fill-low{% endif %}"
+                                            style="width: {{ r.score }}%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 CarrierIQ | AI Resume Intelligence</p>
+    </footer>
+
+</body>
+
+</html>

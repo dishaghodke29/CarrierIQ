@@ -1,7 +1,6 @@
 """
 Job Scraper for CarrierIQ.
 Fetches real job postings from LinkedIn (public scraping) and Adzuna (free API).
-Returns top companies currently hiring for the candidate's skills.
 """
 
 import os
@@ -16,7 +15,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ========== CONFIG ==========
+# Config
 ADZUNA_APP_ID = os.getenv("ADZUNA_APP_ID", "")
 ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY", "")
 

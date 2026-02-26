@@ -1,16 +1,12 @@
 """
 Local Skill Scoring Engine for CarrierIQ.
 Scores candidate skills against role requirements using fuzzy matching.
-No external API needed.
 """
 
 from difflib import SequenceMatcher
 
-# ========== ROLE-SKILL DATABASE ==========
-# Each role maps to categorized skills with weights:
-#   core (3x)     — Must-have skills for the role
-#   important (2x) — Expected skills that strengthen candidacy
-#   nice (1x)      — Bonus skills that add value
+# Role-Skill Database
+# Each role has skills in 3 tiers: core (3x weight), important (2x), nice (1x)
 
 ROLE_SKILLS = {
     "data scientist": {
@@ -153,9 +149,124 @@ ROLE_SKILLS = {
         "nice": ["cypress", "playwright", "k6", "docker", "mobile testing",
                  "security testing", "testng", "cucumber"]
     },
+
+    # ── Mechanical Engineering ─────────────────────────────────────────────
+    "mechanical design engineer": {
+        "core": ["solidworks", "autocad", "mechanical design", "gd&t", "manufacturing processes"],
+        "important": ["fea", "ansys", "catia", "thermodynamics", "material science",
+                       "3d printing", "creo", "tolerance analysis"],
+        "nice": ["python", "matlab", "six sigma", "lean manufacturing", "plm",
+                 "sheet metal design", "injection molding", "dfm/dfa"]
+    },
+    "robotics engineer": {
+        "core": ["python", "ros", "c++", "control systems", "kinematics"],
+        "important": ["sensors", "actuators", "embedded systems", "matlab", "computer vision",
+                       "linux", "solidworks", "plc programming"],
+        "nice": ["deep learning", "slam", "gazebo", "opencv", "tensorflow",
+                 "reinforcement learning", "pcb design", "arduino"]
+    },
+
+    # ── Electrical & Electronics Engineering ───────────────────────────────
+    "embedded systems engineer": {
+        "core": ["c", "c++", "microcontrollers", "rtos", "embedded linux"],
+        "important": ["arm", "pcb design", "uart", "spi", "i2c",
+                       "debugging", "firmware", "oscilloscope"],
+        "nice": ["python", "fpga", "ble", "can bus", "iot",
+                 "freertos", "zephyr", "device drivers"]
+    },
+    "vlsi design engineer": {
+        "core": ["verilog", "vhdl", "digital design", "fpga", "asic design"],
+        "important": ["cadence", "synopsys", "sta", "synthesis", "floorplanning",
+                       "dft", "low power design", "clock tree synthesis"],
+        "nice": ["tcl scripting", "perl", "python", "uvm", "system verilog",
+                 "analog design", "spice", "layout design"]
+    },
+    "iot engineer": {
+        "core": ["python", "embedded c", "sensors", "mqtt", "cloud platforms"],
+        "important": ["raspberry pi", "arduino", "aws iot", "ble", "wifi",
+                       "node.js", "edge computing", "pcb design"],
+        "nice": ["machine learning", "docker", "grafana", "influxdb", "lorawan",
+                 "zigbee", "tensorflow lite", "security"]
+    },
+    "electrical design engineer": {
+        "core": ["autocad electrical", "circuit design", "power systems", "plc programming", "electrical safety"],
+        "important": ["scada", "hmi", "motor drives", "transformers", "relay protection",
+                       "iec standards", "eplan", "matlab"],
+        "nice": ["python", "embedded systems", "renewable energy", "power electronics",
+                 "ethernet/ip", "modbus", "siemens tia portal", "allen bradley"]
+    },
+
+    # ── Civil Engineering ──────────────────────────────────────────────────
+    "structural engineer": {
+        "core": ["staad pro", "etabs", "autocad", "structural analysis", "concrete design"],
+        "important": ["steel design", "revit", "sap2000", "foundation design", "earthquake engineering",
+                       "is codes", "quantity surveying", "primavera"],
+        "nice": ["python", "bim", "tekla", "safe", "ansys",
+                 "cost estimation", "ms project", "3d modeling"]
+    },
+    "construction manager": {
+        "core": ["project management", "autocad", "cost estimation", "scheduling", "construction methods"],
+        "important": ["primavera", "ms project", "bim", "revit", "quantity surveying",
+                       "contract management", "safety management", "quality control"],
+        "nice": ["lean construction", "python", "gis", "drone surveying",
+                 "leed certification", "six sigma", "erp systems", "stakeholder management"]
+    },
+
+    # ── Additional IT Roles ────────────────────────────────────────────────
+    "blockchain developer": {
+        "core": ["solidity", "ethereum", "smart contracts", "web3.js", "javascript"],
+        "important": ["react", "node.js", "truffle", "hardhat", "defi",
+                       "cryptography", "ipfs", "git"],
+        "nice": ["rust", "golang", "layer 2", "nft", "dao",
+                 "hyperledger", "polkadot", "security auditing"]
+    },
+    "game developer": {
+        "core": ["unity", "c#", "game design", "3d math", "physics engine"],
+        "important": ["unreal engine", "c++", "shader programming", "animation", "git",
+                       "blender", "ai programming", "multiplayer networking"],
+        "nice": ["ar/vr", "procedural generation", "mobile games", "steam sdk",
+                 "sound design", "ue blueprints", "godot", "playtesting"]
+    },
+    "network engineer": {
+        "core": ["networking", "cisco", "routing", "switching", "firewalls"],
+        "important": ["tcp/ip", "vpn", "dns", "dhcp", "linux",
+                       "wireshark", "subnetting", "load balancing"],
+        "nice": ["python", "ansible", "sd-wan", "cloud networking", "ccnp",
+                 "network automation", "ipv6", "bgp"]
+    },
+    "database administrator": {
+        "core": ["sql", "database design", "backup and recovery", "performance tuning", "security"],
+        "important": ["oracle", "sql server", "postgresql", "mysql", "replication",
+                       "indexing", "query optimization", "monitoring"],
+        "nice": ["python", "mongodb", "redis", "cloud databases", "automation",
+                 "data modeling", "etl", "high availability"]
+    },
+    "technical writer": {
+        "core": ["technical writing", "documentation", "api documentation", "markdown", "content strategy"],
+        "important": ["git", "html", "css", "swagger", "jira",
+                       "confluence", "information architecture", "editing"],
+        "nice": ["python", "javascript", "dita", "readthedocs", "postman",
+                 "seo", "video scripting", "ux writing"]
+    },
+
+    # ── Interdisciplinary Engineering ──────────────────────────────────────
+    "biomedical engineer": {
+        "core": ["matlab", "signal processing", "medical devices", "biology", "physiology"],
+        "important": ["python", "fda regulations", "biomechanics", "medical imaging", "statistics",
+                       "labview", "solidworks", "clinical trials"],
+        "nice": ["machine learning", "deep learning", "3d printing", "arduino",
+                 "r", "bioinformatics", "iso 13485", "risk management"]
+    },
+    "environmental engineer": {
+        "core": ["wastewater treatment", "environmental impact assessment", "air quality", "gis", "sustainability"],
+        "important": ["autocad", "water resources", "solid waste management", "eia regulations", "python",
+                       "remote sensing", "environmental monitoring", "hse"],
+        "nice": ["matlab", "qgis", "climate modeling", "renewable energy",
+                 "iso 14001", "life cycle assessment", "carbon footprint", "data analysis"]
+    },
 }
 
-# ========== COMPANY TIERS (Fallback) ==========
+# Company Tiers (Fallback)
 COMPANY_TIERS = {
     "high": [
         {"name": "Google", "type": "Top Tech", "careers_url": "https://careers.google.com"},
@@ -381,6 +492,80 @@ def score_skills(user_skills_input, target_role=""):
         },
         "company_tier": company_tier
     }
+
+
+def find_best_roles(user_skills_input):
+    """
+    Score user skills against ALL roles and return ranked matches.
+
+    Args:
+        user_skills_input: Comma-separated skills string or list
+
+    Returns:
+        list of dicts: [{role, score, matched, missing, total, category}, ...]
+        sorted by score descending
+    """
+    user_skills = _parse_skills(user_skills_input)
+
+    if not user_skills:
+        return []
+
+    # Category labels for each role
+    role_categories = {
+        "mechanical design engineer": "Mechanical Engineering",
+        "robotics engineer": "Mechanical Engineering",
+        "embedded systems engineer": "Electronics Engineering",
+        "vlsi design engineer": "Electronics Engineering",
+        "iot engineer": "Electronics Engineering",
+        "electrical design engineer": "Electrical Engineering",
+        "structural engineer": "Civil Engineering",
+        "construction manager": "Civil Engineering",
+        "blockchain developer": "IT / Software",
+        "game developer": "IT / Software",
+        "network engineer": "IT / Networking",
+        "database administrator": "IT / Software",
+        "technical writer": "IT / Content",
+        "biomedical engineer": "Biomedical Engineering",
+        "environmental engineer": "Environmental Engineering",
+    }
+
+    results = []
+
+    for role_key, role_data in ROLE_SKILLS.items():
+        weights = {"core": 3, "important": 2, "nice": 1}
+        total_weight = 0
+        earned_weight = 0
+        matched_count = 0
+        total_count = 0
+
+        for category in ["core", "important", "nice"]:
+            for required_skill in role_data[category]:
+                total_count += 1
+                total_weight += weights[category]
+                for user_skill in user_skills:
+                    if _fuzzy_match(user_skill, required_skill):
+                        earned_weight += weights[category]
+                        matched_count += 1
+                        break
+
+        score = round((earned_weight / total_weight) * 100) if total_weight > 0 else 0
+
+        # Default category for roles not in the map
+        category = role_categories.get(role_key, "IT / Software")
+
+        results.append({
+            "role": role_key.title(),
+            "score": score,
+            "matched": matched_count,
+            "total": total_count,
+            "missing": total_count - matched_count,
+            "category": category,
+        })
+
+    # Sort by score descending, then by role name
+    results.sort(key=lambda x: (-x["score"], x["role"]))
+
+    return results
 
 
 def _generate_suggestions(matched, missing, score, role):
