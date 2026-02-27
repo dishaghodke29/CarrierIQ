@@ -26,9 +26,9 @@
         <!-- AI SUMMARY BANNER -->
         {% if ai_summary %}
         <div class="ai-summary-banner animate-in">
-            <div class="ai-icon">🤖</div>
+            <div class="ai-icon">🧠</div>
             <div class="ai-text">
-                <strong>AI Verdict</strong>
+                <strong>AI SKILL AUDIT</strong>
                 <p>{{ ai_summary }}</p>
             </div>
         </div>
@@ -76,7 +76,7 @@
                 {% set nice_missing = skill_breakdown.get('nice_missing', []) | join(',') %}
                 <a href="{{ url_for('roadmap', role=target_role, score=score) }}?core={{ core_missing }}&important={{ important_missing }}&nice={{ nice_missing }}"
                     class="primary-btn roadmap-btn">
-                    📍 View Your Personalized Roadmap
+                    🔭 View Your Personalized Roadmap
                 </a>
             </div>
             {% endif %}
