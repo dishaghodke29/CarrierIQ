@@ -8,11 +8,23 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     font-family: 'Inter', 'Segoe UI', sans-serif;
     background-color: #0a0a1a;
     color: #e0e0f0;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -492,12 +504,66 @@ body {
 
 /* ===== FOOTER ===== */
 .footer {
+    background: linear-gradient(180deg, #0a0a1a 0%, #050510 100%);
+    border-top: 1px solid rgba(139, 92, 246, 0.12);
+    position: relative;
+    padding: 48px 40px 28px;
     text-align: center;
-    padding: 24px;
-    background: rgba(10, 10, 26, 0.95);
-    border-top: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.footer-logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.footer-logo .logo-accent {
+    color: #8b5cf6;
+}
+
+.footer-tagline {
     font-size: 13px;
-    color: #555;
+    color: #6a6a8e;
+    max-width: 360px;
+    line-height: 1.6;
+}
+
+.footer-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, #7c3aed, #8b5cf6);
+    margin: 0 auto 20px;
+    border-radius: 2px;
+}
+
+.footer-bottom {
+    font-size: 12px;
+    color: #444466;
+    letter-spacing: 0.3px;
+}
+
+.footer-bottom span {
+    color: #8b5cf6;
+    font-weight: 600;
 }
 
 /* ================= UPLOAD PAGE ================= */
@@ -1088,14 +1154,19 @@ body {
 
 .ats-score-value {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
 }
 
 .ats-score-number {
-    font-size: 38px;
+    font-size: 29px;
     font-weight: 700;
     color: #ffffff;
     line-height: 1;
@@ -1108,7 +1179,8 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    margin-top: 2px;
+    margin-top: 4px;
+    display: block;
 }
 
 /* ── Title Area ─────────────────────────────────────────── */

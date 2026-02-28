@@ -47,9 +47,6 @@
                     <h2>ATS Compatibility Score</h2>
                     <p class="ats-subtitle">Your resume was analyzed against industry-standard ATS parsing criteria</p>
                     <div class="ats-badges-row">
-                        {% if ats_grade %}
-                        <span class="ats-grade ats-grade-{{ ats_grade[0]|lower }}">{{ ats_grade }}</span>
-                        {% endif %}
                         {% if ats_score >= 75 %}
                         <span class="score-badge badge-excellent">ATS-Friendly</span>
                         {% elif ats_score >= 50 %}
@@ -163,7 +160,12 @@
     </section>
 
     <footer class="footer">
-        <p>© 2026 CarrierIQ | AI Resume Intelligence</p>
+        <div class="footer-brand">
+            <div class="footer-logo">Carrier<span class="logo-accent">IQ</span></div>
+            <p class="footer-tagline">Smart resume analysis, skill scoring, and career roadmaps for engineers.</p>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-bottom">© 2026 <span>CarrierIQ</span> — Built for ambitious engineers</div>
     </footer>
 
     <script>
